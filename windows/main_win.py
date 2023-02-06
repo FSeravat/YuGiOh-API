@@ -10,10 +10,12 @@ class Window:
 
     def __init__(self):
         layout = [  
-                    [sg.Text("Decks: ", size=(15), justification="right"),sg.InputText(key="inputPath"),sg.FilesBrowse(file_types=("Deck File","*.ydk"))],
+                    [sg.Text("Decks: ", size=(15), justification="right"),sg.InputText(key="inputPath"),sg.FilesBrowse(file_types=[("Deck File","*.ydk")])],
                     [sg.Push(), sg.Column([[sg.Button("Importar", key="BtnOk")]],element_justification='c'), sg.Push()]
                 ]
-        self.window = sg.Window('Deck List YuGiOh', layout)
+        self.icon = "C:\\Users\\felipe.tavares\\Desktop\YuGiOh-API\\assets\\executable_icon.ico" 
+        self.window = sg.Window('Deck List YuGiOh', layout,icon=self.icon)
+        self.all_cards = api.get_all_cards_prints()
 
     def open(self):
         while True:
@@ -45,12 +47,13 @@ class Window:
                 [sg.Push(), sg.Column([[sg.Text(str(file_count)+"/"+str(qtd_files))]],element_justification='c'), sg.Push()],
                 [sg.ProgressBar(id_list.__len__(), orientation='h', size=(30, 20), key='progbar')]
             ]
-            progress_window = sg.Window("Lendo o deck: "+deck_name,layout)
+            progress_window = sg.Window("Lendo o deck: "+deck_name,layout, icon=self.icon)
             event, values = progress_window.read(timeout=False)
             count = 1
             progress_window["progbar"].update_bar(count)
             for card in id_list:
-                card_list.append(api.get_card(card)["name"])
+                find_card = list(filter(lambda x:int(card)==x["id_print"],self.all_cards))[0]["name_card"]
+                card_list.append(find_card)
                 progress_window["progbar"].update_bar(count)
                 count+=1
             progress_window.close()
