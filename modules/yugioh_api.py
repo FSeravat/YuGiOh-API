@@ -23,7 +23,7 @@ class YuGiOh_API:
         return all_cards_prints
 
     def get_all_prints(self,card)->list[dict]:
-        card_prints = list(map(lambda x:{"name_card":card["name"],"id_print":x["id"]},card["card_images"]))
+        card_prints = list(map(lambda x:{"name_card":card["name"],"id_print":x["id"],"type":card["type"]},card["card_images"]))
         return card_prints
 
 # with open("all_cards.json", mode="w", encoding="utf-8") as json_file:
